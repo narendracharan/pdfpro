@@ -1,4 +1,4 @@
-module.exports = [
+module.exports =[
     {
       Variety: "Samsug",
       Type: "Red Jonagold",
@@ -26,5 +26,5 @@ module.exports = [
       Unit: "20Kg Ctn",
       Quantity: "4",
       Price: "9000",
-    }
+    } 
 ]

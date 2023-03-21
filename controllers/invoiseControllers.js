@@ -1,12 +1,20 @@
 const fs = require("fs");
 const path = require("path");
 const pdf = require("pdf-creator-node");
-const { options } = require("../routes/homeRoutes");
 const data = require("./data");
 
 const homePage = async (req, res) => {
-  res.render("app", { datas: data });
-};
+  res.render("app", { datas: data ,
+    trading_Name:"Amazone",
+    address_line1:"Inodre",
+    city:"Inodre",
+    country:"47802 M.P",
+    email:"amazone23@gmail.com",
+    number:"9116472181",
+    serivice:"Amazone Market Credit Service.",
+    image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png"
+  });
+}
 
 const generatePdf = async (req, res) => {
   try {
@@ -19,11 +27,13 @@ const generatePdf = async (req, res) => {
       html: html,
       path: "./docs/" + filename,
     };
-    pdf.create(document, options);
+    let options={
+      format:"Letter"
+    }
+    pdf.create(document,options);
     const filepath = "http://localhost:5000/docs/" + filename;
     res.render("download", {
       path: filepath,
-      document: document,
     });
   } catch (err) {
     res.status(500).json({  
@@ -35,5 +45,5 @@ const generatePdf = async (req, res) => {
 
 module.exports = {
   homePage,
-  generatePdf,
+  generatePdf
 };
