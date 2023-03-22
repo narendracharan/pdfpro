@@ -1,10 +1,24 @@
 const fs = require("fs");
 const path = require("path");
-const pdf = require("pdf-creator-node");
 const data = require("./data");
+const puppetter=require("puppeteer")
 
 const homePage = async (req, res) => {
-  res.render("app", { datas: data ,
+  const browser=await puppetter.launch({headless: false})
+  const page =await browser.newPage()
+   const html = fs.readFileSync(
+      path.join(__dirname, "../views/app.ejs"),
+      "utf-8"
+    );
+  await page.setContent(html)
+  
+  const filename = Math.random() + "_docs" + ".pdf";
+
+  await page.pdf({
+    path:"01"+filename
+  })
+  await browser.close()
+    res.render("app", { datas: data ,
     trading_Name:"Amazone",
     address_line1:"Inodre",
     city:"Inodre",
@@ -16,34 +30,6 @@ const homePage = async (req, res) => {
   });
 }
 
-const generatePdf = async (req, res) => {
-  try {
-    const html = fs.readFileSync(
-      path.join(__dirname, "../views/app.ejs"),
-      "utf-8"
-    );
-    const filename = Math.random() + "_docs" + ".pdf";
-    const document = {
-      html: html,
-      path: "./docs/" + filename,
-    };
-    let options={
-      format:"Letter"
-    }
-    pdf.create(document,options);
-    const filepath = "http://localhost:5000/docs/" + filename;
-    res.render("download", {
-      path: filepath,
-    });
-  } catch (err) {
-    res.status(500).json({  
-      status: "Failed",
-      message: err.message,
-    });
-  }
-};
-
 module.exports = {
-  homePage,
-  generatePdf
+  homePage
 };
